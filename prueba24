@@ -40,6 +40,21 @@ local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 10)
 corner.Parent = button
 
+-- Cambia estos valores para ajustar el cooldown de cada tecla (en segundos).
+local cooldownSeconds = {
+    [Enum.KeyCode.One] = 5,
+    [Enum.KeyCode.Two] = 5,
+    [Enum.KeyCode.Three] = 5,
+    [Enum.KeyCode.Four] = 5,
+}
+
+local habilidadNames = {
+    [Enum.KeyCode.One] = "Habilidad 1",
+    [Enum.KeyCode.Two] = "Habilidad 2",
+    [Enum.KeyCode.Three] = "Habilidad 3",
+    [Enum.KeyCode.Four] = "Habilidad 4",
+}
+
 local habilidades = {
     [Enum.KeyCode.One] = function()
         print("Habilidad 1 lanzada")
@@ -57,16 +72,29 @@ local habilidades = {
 
 local enabled = false
 local inputConnection
+local readyAt = {}
 
 local function onInputBegan(input, gameProcessed)
     if gameProcessed or input.UserInputType ~= Enum.UserInputType.Keyboard then
         return
     end
 
-    local habilidad = habilidades[input.KeyCode]
-    if habilidad then
-        habilidad()
+    local keyCode = input.KeyCode
+    local habilidad = habilidades[keyCode]
+    if not habilidad then
+        return
     end
+
+    local now = os.clock()
+    local remaining = (readyAt[keyCode] or 0) - now
+    if remaining > 0 then
+        print(string.format("[KLKOO] %s en cooldown: %.1f s", habilidadNames[keyCode], remaining))
+        return
+    end
+
+    habilidad()
+    readyAt[keyCode] = now + cooldownSeconds[keyCode]
+    print(string.format("[KLKOO] Cooldown de %s: %d s", habilidadNames[keyCode], cooldownSeconds[keyCode]))
 end
 
 local function setEnabled(value)
@@ -91,4 +119,4 @@ button.Activated:Connect(function()
 end)
 
 setEnabled(true)
-print("[KLKOO] prueba24 cargado. Usa el botón para activar/desactivar; teclas 1–4 para probar.")
+print("[KLKOO] prueba24 cargado. Botón ON/OFF; teclas 1–4 para probar.")
