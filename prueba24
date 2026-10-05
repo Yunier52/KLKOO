@@ -42,10 +42,10 @@ corner.Parent = button
 
 -- Cambia estos valores para ajustar el cooldown de cada tecla (en segundos).
 local cooldownSeconds = {
-    [Enum.KeyCode.One] = 5,
-    [Enum.KeyCode.Two] = 5,
-    [Enum.KeyCode.Three] = 5,
-    [Enum.KeyCode.Four] = 5,
+    [Enum.KeyCode.One] = 1,
+    [Enum.KeyCode.Two] = 1,
+    [Enum.KeyCode.Three] = 1,
+    [Enum.KeyCode.Four] = 1,
 }
 
 local habilidadNames = {
