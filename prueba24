@@ -1,4 +1,4 @@
-local UIS = game:GetService("UserInputService")
+local UserInputService = game:GetService("UserInputService")
 
 local habilidades = {
     [Enum.KeyCode.One] = function()
@@ -19,14 +19,21 @@ local habilidades = {
     [Enum.KeyCode.Four] = function()
         print("Habilidad 4 lanzada")
         -- Código de la habilidad 4
-    end
+    end,
 }
 
-UIS.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
+print("[KLKOO] prueba24 cargado. Pulsa 1, 2, 3 o 4.")
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then
+        return
+    end
+
+    if input.UserInputType ~= Enum.UserInputType.Keyboard then
+        return
+    end
 
     local habilidad = habilidades[input.KeyCode]
-
     if habilidad then
         habilidad()
     end
