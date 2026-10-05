@@ -1,0 +1,33 @@
+local UIS = game:GetService("UserInputService")
+
+local habilidades = {
+    [Enum.KeyCode.One] = function()
+        print("Habilidad 1 lanzada")
+        -- Código de la habilidad 1
+    end,
+
+    [Enum.KeyCode.Two] = function()
+        print("Habilidad 2 lanzada")
+        -- Código de la habilidad 2
+    end,
+
+    [Enum.KeyCode.Three] = function()
+        print("Habilidad 3 lanzada")
+        -- Código de la habilidad 3
+    end,
+
+    [Enum.KeyCode.Four] = function()
+        print("Habilidad 4 lanzada")
+        -- Código de la habilidad 4
+    end
+}
+
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+
+    local habilidad = habilidades[input.KeyCode]
+
+    if habilidad then
+        habilidad()
+    end
+end)
