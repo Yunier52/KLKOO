@@ -40,6 +40,24 @@ local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 10)
 corner.Parent = button
 
+local closeButton = Instance.new("TextButton")
+closeButton.Name = "CloseButton"
+closeButton.Size = UDim2.fromOffset(82, 48)
+closeButton.Position = UDim2.new(0, 206, 0, 80)
+closeButton.BackgroundColor3 = Color3.fromRGB(155, 55, 55)
+closeButton.BorderSizePixel = 0
+closeButton.Font = Enum.Font.GothamBold
+closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeButton.TextSize = 14
+closeButton.Text = "CERRAR"
+closeButton.Active = true
+closeButton.AutoButtonColor = true
+closeButton.Parent = screenGui
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 10)
+closeCorner.Parent = closeButton
+
 -- Cambia estos valores para ajustar el cooldown de cada tecla (en segundos).
 local cooldownSeconds = {
     [Enum.KeyCode.One] = 1,
@@ -116,6 +134,12 @@ end
 
 button.Activated:Connect(function()
     setEnabled(not enabled)
+end)
+
+closeButton.Activated:Connect(function()
+    setEnabled(false)
+    screenGui:Destroy()
+    print("[KLKOO] Script cerrado. Vuelve a ejecutar el cargador para abrirlo.")
 end)
 
 setEnabled(true)
