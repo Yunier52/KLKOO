@@ -1,35 +1,65 @@
+local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+if not player then
+    warn("[KLKOO] No se encontró el jugador local; ejecuta esto en el cliente.")
+    return
+end
+
+local playerGui = player:WaitForChild("PlayerGui")
+local guiName = "KLKOO_Prueba24"
+
+-- Evita duplicar la interfaz al volver a ejecutar el script.
+local oldGui = playerGui:FindFirstChild(guiName)
+if oldGui then
+    oldGui:Destroy()
+end
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = guiName
+screenGui.ResetOnSpawn = false
+screenGui.DisplayOrder = 999
+screenGui.Parent = playerGui
+
+local button = Instance.new("TextButton")
+button.Name = "ToggleButton"
+button.Size = UDim2.fromOffset(180, 48)
+button.Position = UDim2.new(0, 18, 0, 80)
+button.BackgroundColor3 = Color3.fromRGB(35, 145, 85)
+button.BorderSizePixel = 0
+button.Font = Enum.Font.GothamBold
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.TextSize = 16
+button.Text = "HABILIDADES: ON"
+button.Active = true
+button.AutoButtonColor = true
+button.Parent = screenGui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 10)
+corner.Parent = button
 
 local habilidades = {
     [Enum.KeyCode.One] = function()
         print("Habilidad 1 lanzada")
-        -- Código de la habilidad 1
     end,
-
     [Enum.KeyCode.Two] = function()
         print("Habilidad 2 lanzada")
-        -- Código de la habilidad 2
     end,
-
     [Enum.KeyCode.Three] = function()
         print("Habilidad 3 lanzada")
-        -- Código de la habilidad 3
     end,
-
     [Enum.KeyCode.Four] = function()
         print("Habilidad 4 lanzada")
-        -- Código de la habilidad 4
     end,
 }
 
-print("[KLKOO] prueba24 cargado. Pulsa 1, 2, 3 o 4.")
+local enabled = false
+local inputConnection
 
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then
-        return
-    end
-
-    if input.UserInputType ~= Enum.UserInputType.Keyboard then
+local function onInputBegan(input, gameProcessed)
+    if gameProcessed or input.UserInputType ~= Enum.UserInputType.Keyboard then
         return
     end
 
@@ -37,4 +67,28 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if habilidad then
         habilidad()
     end
+end
+
+local function setEnabled(value)
+    enabled = value
+    button.Text = enabled and "HABILIDADES: ON" or "HABILIDADES: OFF"
+    button.BackgroundColor3 = enabled and Color3.fromRGB(35, 145, 85) or Color3.fromRGB(155, 55, 55)
+
+    if inputConnection then
+        inputConnection:Disconnect()
+        inputConnection = nil
+    end
+
+    if enabled then
+        inputConnection = UserInputService.InputBegan:Connect(onInputBegan)
+    end
+
+    print("[KLKOO] Habilidades " .. (enabled and "activadas" or "desactivadas"))
+end
+
+button.Activated:Connect(function()
+    setEnabled(not enabled)
 end)
+
+setEnabled(true)
+print("[KLKOO] prueba24 cargado. Usa el botón para activar/desactivar; teclas 1–4 para probar.")
